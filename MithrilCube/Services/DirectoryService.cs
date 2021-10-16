@@ -28,14 +28,14 @@ namespace MithrilCube.Services
         /// <param name="extensions">検索する拡張子群{ ".cs", ".exe"}みたいな感じ</param>
         public void FolderInsiteSearch(string folderPath, List<string> fileFullPathList, string[] extensions);
 
-        /// <summary>
-        /// ファイルを対象のディレクトリにコピーします
-        /// ディレクトリが無ければ作成します
-        /// </summary>
-        /// <param name="sourceFile"></param>
-        /// <param name="destDirectory"></param>
-        /// <param name="isOverWrite"></param>
-        public void FileCopyWithCreateDirectory(string sourceFile, string destDirectory, bool isOverWrite);
+        ///// <summary>
+        ///// ファイルを対象のディレクトリにコピーします
+        ///// ディレクトリが無ければ作成します
+        ///// </summary>
+        ///// <param name="sourceFile"></param>
+        ///// <param name="destDirectory"></param>
+        ///// <param name="isOverWrite"></param>
+        //public void FileCopyWithCreateDirectory(string sourceFile, string destDirectory, bool isOverWrite);
     }
 
     /// <summary>
@@ -78,13 +78,6 @@ namespace MithrilCube.Services
             else
                 foreach (var dirName in dirNames)
                     FolderInsiteSearch(dirName, filenameList, extensions);
-        }
-
-        public void FileCopyWithCreateDirectory(string sourceFile, string destDirectory, bool isOverWrite)
-        {
-            // もうちょっとよく考えた方が良いと思う。
-            // 
-
         }
     }
 }
