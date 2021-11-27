@@ -23,12 +23,12 @@ namespace MithrilCube.Services
 
         /// <summary>
         /// 指定フォルダ以下のすべてのフォルダを探索し、
-        /// 指定拡張子のファイル名をリストに順次追加していく
+        /// 指定拡張子のファイルフルパスのリストを作成する
         /// </summary>
         /// <param name="folderPath">探索するフォルダ</param>
-        /// <param name="fileFullPathList">ファイル名のフルパスリスト</param>
         /// <param name="extensions">検索する拡張子群{ ".cs", ".exe"}みたいな感じ</param>
-        public void FolderInsiteSearch(string folderPath, List<string> fileFullPathList, string[] extensions);
+        /// <returns>ファイルフルパスのリスト</returns>
+        public List<string> FolderInsiteSearch(string folderPath, string[] extensions);
 
         // Directory.Deleteの第2引数をtrueにすると同じことができるので削除
 
@@ -82,7 +82,14 @@ namespace MithrilCube.Services
             return Directory.CreateDirectory(directory);
         }
 
-        public void FolderInsiteSearch(string folderPath, List<string> filenameList, string[] extensions)
+        public List<string> FolderInsiteSearch(string folderPath, string[] extensions)
+        {
+            var result = new List<string>();
+            FolderInsiteSearchSub(folderPath, result, extensions);
+            return result;
+        }
+
+        private void FolderInsiteSearchSub(string folderPath, List<string> filenameList, string[] extensions)
         {
             //現在のフォルダ内の指定拡張子のファイル名をリストに追加
             foreach (var fileName in Directory.EnumerateFiles(folderPath))
@@ -96,7 +103,7 @@ namespace MithrilCube.Services
                 return;
             else
                 foreach (var dirName in dirNames)
-                    FolderInsiteSearch(dirName, filenameList, extensions);
+                    FolderInsiteSearchSub(dirName, filenameList, extensions);
         }
 
         //public void DeleteDirectory(string directory)
