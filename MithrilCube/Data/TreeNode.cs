@@ -11,7 +11,149 @@ namespace MithrilCube.Data
     /// <typeparam name="T"></typeparam>
     public class TreeNode<T>
     {
+        protected IList<TreeNode<T>> _children = null;
+        protected T _value;
+        protected TreeNode<T> _parent = null;
 
+        /// <summary>
+        /// データ実体
+        /// </summary>
+        public virtual T Value { get { return _value; } set { _value = value; } }
+
+        /// <summary>
+        /// 親への参照プロパティ
+        /// </summary>
+        public virtual TreeNode<T> Parent { get { return _parent; } set { _parent = value; } }
+
+        /// <summary>
+        /// 子ノードのリストプロパティ
+        /// nullの場合は新しくリストを作成するので、nullは返ってこない
+        /// </summary>
+        public virtual IList<TreeNode<T>> Children
+        {
+            get
+            {
+                if (_children == null)
+                    _children = new List<TreeNode<T>>();
+                return _children;
+            }
+            set { _children = value; }
+        }
+
+        public TreeNode(T data)
+        {
+            Value = data;
+        }
+
+        #region 追加削除メソッド
+        /// <summary>
+        /// 子ノードを追加する。
+        /// nullの場合新しく子ノードを作成する
+        /// </summary>
+        /// <param name="child">追加したいノード</param>
+        /// <returns>追加後のオブジェクト</returns>
+        public virtual TreeNode<T> AddChild(TreeNode<T> child)
+        {
+            Children.Add(child);
+            child.Parent = this;
+
+            return this;
+        }
+
+        /// <summary>
+        /// 子ノードを削除する。
+        /// </summary>
+        /// <param name="child">削除したいノード</param>
+        /// <returns>削除後のオブジェクト</returns>
+        public virtual TreeNode<T> RemoveChild(TreeNode<T> child)
+        {
+            Children.Remove(child);
+            return this;
+        }
+
+        /// <summary>
+        /// 子ノードを削除する。
+        /// </summary>
+        /// <param name="child">削除したいノード</param>
+        /// <returns>削除の可否</returns>
+        public virtual bool TryRemoveChild(TreeNode<T> child)
+        {
+            return Children.Remove(child);
+        }
+
+        /// <summary>
+        /// 子ノードを全て削除する。
+        /// </summary>
+        /// <returns>子ノードを全削除後のオブジェクト</returns>
+        public virtual TreeNode<T> ClearChildren()
+        {
+            Children.Clear();
+            return this;
+        }
+
+        /// <summary>
+        /// 自身のノードを親ツリーから削除する。
+        /// </summary>
+        /// <returns>親のオブジェクト</returns>
+        public virtual TreeNode<T> RemoveOwn()
+        {
+            return Parent.RemoveChild(this);
+        }
+
+        /// <summary>
+        /// 自身のノードを親ツリーから削除する。
+        /// </summary>
+        /// <returns>削除の可否</returns>
+        public virtual bool TryRemoveOwn()
+        {
+            return Parent.TryRemoveChild(this);
+        }
+        #endregion
+
+        #region リストに変換するメソッド
+        /// <summary>
+        /// 左方優先で順に辿ってリストにする
+        /// </summary>
+        /// <param name="parent"></param>
+        public void ToList(List<T> parent)
+        {
+            parent.Add(Value);
+
+            if (_children != null)
+            {
+                foreach (var item in _children)
+                {
+                    item.ToList(parent);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 底優先探索の順を返す
+        /// ツリーを昇る時に追加するので、深さ優先ではない
+        /// </summary>
+        /// <returns></returns>
+        public List<TreeNode<T>> DepthList()
+        {
+            var result = new List<TreeNode<T>>();
+
+            // 底
+            if (_children != null)
+            {
+                foreach (var item in _children)
+                {
+                    var list = item.DepthList();
+                    result.AddRange(list);
+                }
+            }
+
+            result.Add(this);
+
+            return result;
+        }
+        #endregion
+
+        #region その他便利メソッド
         /// <summary>
         /// それぞれのデータの親が分かっている場合
         /// 木構造データを作成します
@@ -49,169 +191,7 @@ namespace MithrilCube.Data
 
             return root;
         }
-
-        /// <summary>
-        /// 左方優先で順に辿ってリストにする
-        /// </summary>
-        /// <param name="parent"></param>
-        public void ToList(List<T> parent)
-        {
-            parent.Add(Value);
-
-            if (children != null)
-            {
-                foreach (var item in children)
-                {
-                    item.ToList(parent);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 底優先探索の順を返す
-        /// 多分深さ優先とは違うと思う
-        /// 辿っていって根っこだったら追加
-        /// </summary>
-        /// <returns></returns>
-        public List<TreeNode<T>> DepthList()
-        {
-            var result = new List<TreeNode<T>>();
-
-            // 底
-            if(children != null)
-            {
-                foreach (var item in children)
-                {
-                    var list = item.DepthList();
-                    result.AddRange(list);
-                }
-            }
-
-            result.Add(this);
-
-            return result;
-        }
-
-        /// <summary>
-        /// 親への参照フィールド
-        /// </summary>
-        protected TreeNode<T> parent = null;
-
-        /// <summary>
-        /// 親への参照プロパティ
-        /// </summary>
-        public virtual TreeNode<T> Parent
-        {
-            get
-            {
-                return parent;
-            }
-            set
-            {
-                parent = value;
-            }
-        }
-
-        /// <summary>
-        /// 子ノードのリストフィールド
-        /// </summary>
-        protected IList<TreeNode<T>> children = null;
-
-        /// <summary>
-        /// 子ノードのリストプロパティ
-        /// </summary>
-        public virtual IList<TreeNode<T>> Children
-        {
-            get
-            {
-                if (children == null)
-                    children = new List<TreeNode<T>>();
-                return children;
-            }
-            set
-            {
-                children = value;
-            }
-        }
-
-        /// <summary>
-        /// データ実体
-        /// </summary>
-        public T Value = default;
-
-        public TreeNode(T data)
-        {
-            Value = data;
-        }
-
-        /// <summary>
-        /// 子ノードを追加する。
-        /// </summary>
-        /// <param name="child">追加したいノード</param>
-        /// <returns>追加後のオブジェクト</returns>
-        public virtual TreeNode<T> AddChild(TreeNode<T> child)
-        {
-            if (child == null)
-                throw new ArgumentNullException("Adding tree child is null.");
-
-            this.Children.Add(child);
-            child.Parent = this;
-
-            return this;
-        }
-
-        /// <summary>
-        /// 子ノードを削除する。
-        /// </summary>
-        /// <param name="child">削除したいノード</param>
-        /// <returns>削除後のオブジェクト</returns>
-        public virtual TreeNode<T> RemoveChild(TreeNode<T> child)
-        {
-            this.Children.Remove(child);
-            return this;
-        }
-
-        /// <summary>
-        /// 子ノードを削除する。
-        /// </summary>
-        /// <param name="child">削除したいノード</param>
-        /// <returns>削除の可否</returns>
-        public virtual bool TryRemoveChild(TreeNode<T> child)
-        {
-            return this.Children.Remove(child);
-        }
-
-        /// <summary>
-        /// 子ノードを全て削除する。
-        /// </summary>
-        /// <returns>子ノードを全削除後のオブジェクト</returns>
-        public virtual TreeNode<T> ClearChildren()
-        {
-            this.Children.Clear();
-            return this;
-        }
-
-        /// <summary>
-        /// 自身のノードを親ツリーから削除する。
-        /// </summary>
-        /// <returns>親のオブジェクト</returns>
-        public virtual TreeNode<T> RemoveOwn()
-        {
-            TreeNode<T> parent = this.Parent;
-            parent.RemoveChild(this);
-            return parent;
-        }
-
-        /// <summary>
-        /// 自身のノードを親ツリーから削除する。
-        /// </summary>
-        /// <returns>削除の可否</returns>
-        public virtual bool TryRemoveOwn()
-        {
-            TreeNode<T> parent = this.Parent;
-            return parent.TryRemoveChild(this);
-        }
-
+        #endregion
     }
 
 }
