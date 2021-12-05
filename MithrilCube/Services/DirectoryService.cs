@@ -30,14 +30,6 @@ namespace MithrilCube.Services
         /// <returns>ファイルフルパスのリスト</returns>
         public List<string> FolderInsiteSearch(string folderPath, string[] extensions);
 
-        // Directory.Deleteの第2引数をtrueにすると同じことができるので削除
-
-        ///// <summary>
-        ///// 指定したディレクトリの中身を全て削除する
-        ///// </summary>
-        ///// <param name="directory">ディレクトリ</param>
-        //public void DeleteDirectory(string directory);
-
         /// <summary>
         /// 名前を指定して、アセンブリに埋め込まれているリソースを出力する
         /// </summary>
@@ -53,15 +45,6 @@ namespace MithrilCube.Services
         /// <param name="assambly">呼び出し元のアセンブリ情報</param>
         /// <param name="basePath">出力先ディレクトリ</param>
         public void CopyResources(Assembly assambly, string basePath = "./");
-
-        ///// <summary>
-        ///// ファイルを対象のディレクトリにコピーします
-        ///// ディレクトリが無ければ作成します
-        ///// </summary>
-        ///// <param name="sourceFile"></param>
-        ///// <param name="destDirectory"></param>
-        ///// <param name="isOverWrite"></param>
-        //public void FileCopyWithCreateDirectory(string sourceFile, string destDirectory, bool isOverWrite);
     }
 
     /// <summary>
@@ -105,42 +88,6 @@ namespace MithrilCube.Services
                 foreach (var dirName in dirNames)
                     FolderInsiteSearchSub(dirName, filenameList, extensions);
         }
-
-        //public void DeleteDirectory(string directory)
-        //{
-        //    // 再帰処理
-        //    DeleteDirectorySub(directory, true);
-        //}
-
-        //// 外から呼び出すときはisTop=trueとする
-        //private void DeleteDirectorySub(string directory, bool isTop)
-        //{
-        //    if (!Directory.Exists(directory))
-        //    {
-        //        return;
-        //    }
-
-        //    //ディレクトリ以外の全ファイルを削除
-        //    string[] filePaths = Directory.GetFiles(directory);
-        //    foreach (string filePath in filePaths)
-        //    {
-        //        File.SetAttributes(filePath, FileAttributes.Normal);
-        //        File.Delete(filePath);
-        //    }
-
-        //    //ディレクトリの中のディレクトリも再帰的に削除
-        //    string[] directoryPaths = Directory.GetDirectories(directory);
-        //    foreach (string directoryPath in directoryPaths)
-        //    {
-        //        DeleteDirectorySub(directoryPath, false);
-        //    }
-
-        //    if (!isTop)
-        //    {
-        //        //中が空になったらディレクトリ自身も削除
-        //        Directory.Delete(directory, false);
-        //    }
-        //}
 
         public void CopyResources(Assembly assambly, string basePath = "./")
         {

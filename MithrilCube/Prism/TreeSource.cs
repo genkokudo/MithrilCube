@@ -22,7 +22,7 @@ namespace MithrilCube.Prism
     /// <summary>
     /// WPF&Prism用の木構造データで、TreeViewにバインドできる
     /// </summary>
-    public abstract class TreeSource<T> : INotifyPropertyChanged
+    public class TreeSource<T> : INotifyPropertyChanged
     {
         private bool _isExpanded = false;
         private T _value;
