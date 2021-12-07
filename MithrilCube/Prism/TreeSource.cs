@@ -25,6 +25,7 @@ namespace MithrilCube.Prism
     public class TreeSource<T> : INotifyPropertyChanged
     {
         private bool _isExpanded = false;
+        private bool _isSelected = false;
         private T _value;
         private TreeSource<T> _parent = null;
         private ObservableCollection<TreeSource<T>> _children = null;
@@ -35,6 +36,17 @@ namespace MithrilCube.Prism
         }
 
         /// <summary>
+        /// 要バインディング
+        /// TreeViewで選択されているか
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { _isSelected = value; OnPropertyChanged("IsSelected"); }
+        }
+
+        /// <summary>
+        /// 要バインディング
         /// TreeViewのツリーを開いているか
         /// デフォルトはfalseにする
         /// </summary>
