@@ -28,7 +28,7 @@ namespace MithrilCube.Prism
         private bool _isSelected = false;
         private T _value;
         private TreeSource<T> _parent = null;
-        private ObservableCollection<TreeSource<T>> _children = null;
+        private ObservableCollection<TreeSource<T>> _children = new ObservableCollection<TreeSource<T>>();  // nullだと表示に反映されない不具合の元になる。
 
         public TreeSource(T value)
         {
@@ -98,7 +98,7 @@ namespace MithrilCube.Prism
         /// </summary>
         public virtual TreeSource<T> AddChild(TreeSource<T> child)
         {
-            if (null == Children) Children = new ObservableCollection<TreeSource<T>>();
+            //if (null == Children) Children = new ObservableCollection<TreeSource<T>>();
             child.Parent = this;
             Children.Add(child);
 
