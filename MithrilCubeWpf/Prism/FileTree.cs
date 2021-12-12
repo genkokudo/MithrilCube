@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 
 // ディレクトリを指定して、そのディレクトリとファイルの情報をツリー形式で取得したい
-namespace MithrilCube.Prism
+namespace MithrilCubeWpf.Prism
 {
     // ツリー表示データ
     // XAMLはジェネリクス型が扱えないため、このように型を固定したクラスに再定義することが必要

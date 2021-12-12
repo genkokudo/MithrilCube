@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MithrilCube", "MithrilCube\MithrilCube.csproj", "{01323917-CBAD-434C-8E34-643051899196}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MithrilCube", "MithrilCube\MithrilCube.csproj", "{01323917-CBAD-434C-8E34-643051899196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MithrilCubeWpf", "MithrilCubeWpf\MithrilCubeWpf.csproj", "{355DBE58-8B4D-4D06-B391-438B9CEFBC08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{01323917-CBAD-434C-8E34-643051899196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01323917-CBAD-434C-8E34-643051899196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01323917-CBAD-434C-8E34-643051899196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{355DBE58-8B4D-4D06-B391-438B9CEFBC08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355DBE58-8B4D-4D06-B391-438B9CEFBC08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355DBE58-8B4D-4D06-B391-438B9CEFBC08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355DBE58-8B4D-4D06-B391-438B9CEFBC08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

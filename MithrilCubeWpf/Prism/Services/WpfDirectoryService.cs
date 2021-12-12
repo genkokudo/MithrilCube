@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace MithrilCube.Prism.Services
+namespace MithrilCubeWpf.Prism.Services
 {
     /// <summary>
     /// WPF用

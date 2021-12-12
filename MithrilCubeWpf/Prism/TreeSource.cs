@@ -6,7 +6,7 @@ using System.Text;
 
 // TreeNodeと実装が重複しているが、継承はできない
 // 型引数を使ってもObservableCollectionとIListの暗黙変換ができないため
-namespace MithrilCube.Prism
+namespace MithrilCubeWpf.Prism
 {
     // 実際はこのように使うが、XAMLはジェネリクス型をDataTypeとして参照できないので、TreeSourceを継承したModelクラスを作る。
     // xmlns:dmfm="clr-namespace:DigitalMegaFlareOffline.Modules.Common.Models;"
