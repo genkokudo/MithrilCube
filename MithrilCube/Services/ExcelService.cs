@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MithrilCube.Services
 {
@@ -11,12 +12,39 @@ namespace MithrilCube.Services
     public interface IExcelService
     {
         public string GetCell(string filePath, string sheetName = null, string cellAddress = null);
+
+        /// <summary>
+        /// Excelファイルを読み込み、シート名をキーとした辞書にする
+        /// xlsxのみ対応
+        /// </summary>
+        /// <param name="filePath">ファイルパス</param>
+        /// <param name="isRequiredTitle">1行目に何もない列を無視する</param>
+        /// <returns>シート名をキーとした辞書、行と列の2次元string、ファイルが存在しなければnull</returns>
+        public Dictionary<string, List<List<string>>> ReadExcel(string filePath, bool isRequiredTitle = false);
+
+        /// <summary>
+        /// Excelファイル作成
+        /// </summary>
+        /// <param name="filePath">ファイルパス</param>
+        /// <returns></returns>
+        public XLWorkbook CreateExcelFile(string filePath);
+
+        /// <summary>
+        /// シート内の指定した列の番号を取得する
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <returns>なかったら-1</returns>
+        public int GetIndex(List<List<string>> sheet, string name);
     }
 
     public class ExcelService : IExcelService
     {
         public string GetCell(string filePath, string sheetName = null, string cellAddress = null)
         {
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
             using var stream = new FileStream(filePath, FileMode.Open);
             using var wb = new XLWorkbook(stream);
             var address = string.IsNullOrWhiteSpace(cellAddress) ? "A1" : cellAddress;
@@ -40,39 +68,35 @@ namespace MithrilCube.Services
             return null;
         }
 
-        // RazorHelperからパクったので、重複しないよう注意
-
-        /// <summary>
-        /// Excelファイルを読み込み、シート名をキーとした辞書にする
-        /// xlsxのみ対応
-        /// </summary>
-        /// <param name="directry">ディレクトリ</param>
-        /// <param name="filename">拡張子付きのファイル名</param>
-        /// <param name="isRequiredTitle">1行目に何もない列を無視する</param>
-        /// <returns>シート名をキーとした辞書、行と列の2次元string</returns>
-        public static Dictionary<string, List<List<string>>> ReadExcel(Stream stream, bool isRequiredTitle = false)
+        public Dictionary<string, List<List<string>>> ReadExcel(string filePath, bool isRequiredTitle = false)
         {
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
             // ファイルの読み込み
             var xlsx = new Dictionary<string, List<List<string>>>();
-            using (var wb = new XLWorkbook(stream))
+            using (var wb = new XLWorkbook(filePath))
             {
                 foreach (var ws in wb.Worksheets)
                 {
                     // ワークシート
                     List<List<string>> sheet = new List<List<string>>();
-                    // TODO:何も書いてないシートがあると落ちる
-                    for (int i = 1; i <= ws.LastCellUsed().Address.RowNumber; i++)
+                    if (ws.LastCellUsed() != null)
                     {
-                        List<string> raw = new List<string>();
-                        for (int j = 1; j <= ws.LastCellUsed().Address.ColumnNumber; j++)
+                        for (int i = 1; i <= ws.LastCellUsed().Address.RowNumber; i++)
                         {
-                            // 1行目に何もない列を無視する
-                            if (!isRequiredTitle || !string.IsNullOrWhiteSpace(ws.Cell(1, j).Value.ToString()))
+                            List<string> raw = new List<string>();
+                            for (int j = 1; j <= ws.LastCellUsed().Address.ColumnNumber; j++)
                             {
-                                raw.Add(ws.Cell(i, j).Value.ToString());
+                                // 1行目に何もない列を無視する
+                                if (!isRequiredTitle || !string.IsNullOrWhiteSpace(ws.Cell(1, j).Value.ToString()))
+                                {
+                                    raw.Add(ws.Cell(i, j).Value.ToString());
+                                }
                             }
+                            sheet.Add(raw);
                         }
-                        sheet.Add(raw);
                     }
 
                     // シート名と一緒に登録
@@ -83,15 +107,33 @@ namespace MithrilCube.Services
             return xlsx;
         }
 
-        /// <summary>
-        /// Excelを読み込む
-        /// </summary>
-        /// <param name="filePath">ファイルパス</param>
-        /// <returns></returns>
-        private Dictionary<string, List<List<string>>> ReadExcel(string filePath, bool isRequiredTitle = false)
+        public XLWorkbook CreateExcelFile(string filePath)
         {
-            using var stream = new FileStream(filePath, FileMode.Open);
-            return ReadExcel(stream, isRequiredTitle);
+            // ブック作成
+            var wb = new XLWorkbook();
+            // シート作成
+            wb.AddWorksheet("Sheet1");
+            // 保存
+            wb.SaveAs(filePath);
+            return wb;
         }
+
+        public int GetIndex(List<List<string>> sheet, string name)
+        {
+            var result = -1;
+
+            if (sheet.Count > 2)
+            {
+                for (int i = 0; i < sheet[0].Count; i++)
+                {
+                    if (sheet[0][i] == name)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return result;
+        }
+
     }
 }
