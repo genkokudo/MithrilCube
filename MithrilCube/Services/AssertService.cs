@@ -15,7 +15,7 @@ namespace MithrilCube.Services
     /// <summary>
     /// オブジェクトを渡すと、そのクラス定義を読み取ってAssertを生成する
     /// </summary>
-    public interface AssertService
+    public interface IAssertService
     {
         /// <summary>
         /// オブジェクトに対して、Assertを作成する 
@@ -27,7 +27,7 @@ namespace MithrilCube.Services
         public string MakeAssert(object obj, string name);
     }
 
-    public class AssertService : AssertService
+    public class AssertService : IAssertService
     {
         // Roslynではなく、Reflectionを使ってオブジェクトの中身を見る。
         // Roslynはどっちかっつーとコードを見るので、オブジェクトの値を取ったりはしないのかな？
